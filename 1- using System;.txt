@@ -1,0 +1,261 @@
+1- using System;
+
+public class ValueTypeDemo
+{
+    public static void Main(string[] args)
+    {
+        // 1. Declare duas variáveis int e atribua uma à outra.
+        int a = 10;
+        int b = a;
+
+        Console.WriteLine($"Valores iniciais: a = {a}, b = {b}");
+
+        // 2. Modifique a segunda variável.
+        b = 20;
+
+        // 3. Exiba os valores de ambas as variáveis.
+        Console.WriteLine($"Valores finais: a = {a}, b = {b}");
+    }
+}
+2-using System;
+
+public class Program
+{
+
+
+    // 1. Isso aqui é o "molde" da Pessoa.
+    public class Pessoa
+    {
+        public string Nome;
+    }
+
+    public static void DemoTiposDeReferencia()
+    {
+        Console.WriteLine("--- Exemplo 2: Tipos de Referência (a Classe Pessoa) ---");
+
+        // 2. 'pessoa1' cria um objeto NOVO (a "Ana").
+        //    'pessoa2' NÃO cria nada novo, só ganha o "endereço" do objeto 'pessoa1'.
+        Pessoa pessoa1 = new Pessoa { Nome = "Ana" };
+        Pessoa pessoa2 = pessoa1;
+
+        Console.WriteLine($"Nome inicial - Pessoa 1: {pessoa1.Nome}, Pessoa 2: {pessoa2.Nome}"); // (Ana, Ana)
+
+        // 3. Mudamos o nome usando o 'pessoa2'.
+        pessoa2.Nome = "Bia";
+
+        // 4. Como 'pessoa1' e 'pessoa2' apontam pro MESMO objeto,
+        //    os dois agora veem o nome "Bia".
+        Console.WriteLine($"Nome final - Pessoa 1: {pessoa1.Nome}, Pessoa 2: {pessoa2.Nome}"); // (Bia, Bia)
+        Console.WriteLine("(Mudar 'pessoa2' afetou 'pessoa1' porque ambos apontam para o MESMO objeto)");
+    }
+
+
+    // --- Ponto de Entrada Principal ---
+    // O Main é quem "chama" o exemplo pra rodar
+    public static void Main(string[] args)
+    {
+        DemoTiposDeReferencia();
+    }
+}
+
+3-using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("--- Exemplo 3: Conversão Explícita (Casting) ---");
+
+        // 1. Criamos um 'double' (decimal) com o valor 9.78.
+        double valorDecimal = 9.78;
+
+        // 2. Forçamos a barra! O (int) aqui é o "casting".
+        //    Isso OBRIGA o 'double' a virar um 'int'.
+        //    Nesse processo, ele não arredonda, ele só joga a parte decimal (.78) fora.
+        int valorInteiro = (int)valorDecimal;
+
+        // 3. Mostra o resultado da "mágica".
+        Console.WriteLine($"Valor original (double): {valorDecimal}");
+        Console.WriteLine($"Valor convertido (int): {valorInteiro}");
+    }
+}
+4-using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("--- Exemplo 4: Conversão Segura (TryParse) ---");
+
+        // 1. Pede pro usuário digitar qualquer coisa.
+        Console.WriteLine("Digite um número (ou qualquer coisa):");
+        string input = Console.ReadLine(); // Pega o que o usuário digitou
+
+        // 2. Aqui é a parte legal: int.TryParse()
+        //     ele "tenta" converter.
+        //    'out numeroConvertido' é onde ele vai guardar o número SE der certo.
+        //    'sucesso' vai virar 'true' se a conversão funcionar, e 'false' se não.
+   
+        int numeroConvertido; // Variável "em branco" pra guardar o resultado
+        bool sucesso = int.TryParse(input, out numeroConvertido);
+
+        // 3. Verifica o 'bool' (sucesso) pra ver o que aconteceu.
+        if (sucesso)
+        {
+            // Se 'sucesso' for true, 'numeroConvertido' tem o valor!
+            Console.WriteLine($"Conversão bem-sucedida! O número é: {numeroConvertido}");
+        }
+        else
+        {
+            // Se 'sucesso' for false,  deu ruim.
+            Console.WriteLine("Entrada inválida. Isso aí não era um número.");
+        }
+    }
+}
+5- using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("--- Exemplo 5: Comparação de Strings (== vs Endereço) ---");
+
+        // 1. s1 e s2 são criados do jeito "literal" (normal).
+        //    O C# é esperto e otimiza: se o texto é igual, ele usa o MESMO objeto na memória.
+        string s1 = "Olá";
+        string s2 = "Olá";
+
+        // 2. O 'new String()' FORÇA o C# a criar um objeto NOVO na memória,
+        //    mesmo que o texto "Olá" já exista em outro lugar.
+        string s3 = new String("Olá");
+
+        // 3. Compara o CONTEÚDO (Valor)
+        //    O C# entende que pra string, '==' deve checar o texto, não o endereço.
+        Console.WriteLine($"s1 == s2 ? {s1 == s2}"); // 'Olá' é igual a 'Olá'? Sim. (True)
+        Console.WriteLine($"s1 == s3 ? {s1 == s3}"); // 'Olá' é igual a 'Olá'? Sim. (True)
+
+        Console.WriteLine("--- Checando o Endereço de Memória ---");
+
+        // 4. Object.ReferenceEquals() checa se s1 e s2 apontam pro MESMO local na memória.
+        //    Como o C# otimizou (passo 1), a resposta é Sim.
+        Console.WriteLine($"Mesmo endereço (s1, s2) ? {Object.ReferenceEquals(s1, s2)}"); // (True)
+
+        // 5. Checa se s1 e s3 apontam pro MESMO local.
+        //    Como a gente FORÇOU um objeto novo (passo 2), a resposta é Não.
+        Console.WriteLine($"Mesmo endereço (s1, s3) ? {Object.ReferenceEquals(s1, s3)}"); // (False)
+    }
+}
+6-using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("--- Exemplo 6: Arrays são Tipos de Referência ---");
+
+        // 1. Criamos um array e colocamos na variável 'numeros1'.
+        //    'numeros1' guarda o ENDEREÇO desse array na memória.
+        int[] numeros1 = { 1, 2, 3 };
+
+        // 2. 'numeros2' NÃO cria um array novo.
+        //    Ele só copia o ENDEREÇO que 'numeros1' estava guardando.
+        //    Agora, as duas variáveis apontam pro MESMO array.
+        int[] numeros2 = numeros1;
+
+        Console.WriteLine($"Valor inicial (numeros1[0]): {numeros1[0]}"); // (Mostra 1)
+
+        // 3. Modificamos o array usando o 'numeros2'.
+        numeros2[0] = 100;
+
+        // 4. Quando vamos checar o 'numeros1', ele vê a mudança,
+        //    porque é o mesmo array que 'numeros2' modificou.
+        Console.WriteLine($"Valor final (numeros1[0]): {numeros1[0]}"); // (Mostra 100)
+
+        Console.WriteLine("\n--- Como fazer uma CÓPIA de verdade ---");
+
+        int[] numeros3 = { 1, 2, 3 };
+        
+        // Usando .Clone(), a gente força o C# a criar um array NOVO
+        // e copiar os valores pra dentro dele.
+        int[] numeros4 = (int[])numeros3.Clone(); 
+
+        // Agora sim, 'numeros4' é um array separado.
+        numeros4[0] = 555;
+
+        Console.WriteLine($"Original (numeros3[0]): {numeros3[0]}"); // (Continua 1)
+        Console.WriteLine($"Cópia (numeros4[0]): {numeros4[0]}"); // (Vale 555)
+    }
+}
+7-Tipos de Valor (Primitivos) - A Cópia (Xerox)
+São tipos como int, double, bool. A variável armazena o dado diretamente.
+
+Quando você atribui uma variável a outra, o valor é copiado. As duas variáveis se tornam independentes. Alterar uma não afeta a outra.
+
+Exemplo de Código (Valor):
+
+C#
+
+// x armazena o valor 50
+int x = 50;
+
+// y recebe uma CÓPIA do valor de x
+int y = x;
+
+// Alterar y não afeta x
+y = 60;
+
+// Saída:
+Console.WriteLine($"x: {x}"); // x continua 50
+Console.WriteLine($"y: {y}"); // y agora é 60
+Tipos de Referência - O Endereço
+
+Quando você atribui uma variável a outra, a referência é copiada, não o objeto. Ambas as variáveis passam a apontar para o mesmo objeto. Alterar o objeto através de uma variável afeta a outra.
+
+Exemplo de Código (Referência):
+
+C#
+
+// arr1 armazena o ENDEREÇO de um array
+int[] arr1 = { 10, 20 };
+
+// arr2 copia o MESMO ENDEREÇO de arr1
+int[] arr2 = arr1;
+
+// Alterar o array usando arr2
+arr2[0] = 99;
+
+// arr1 também vê a mudança, pois é o mesmo array
+// Saída:
+Console.WriteLine($"arr1[0]: {arr1[0]}"); // arr1[0] agora é 99
+Console.WriteLine($"arr2[0]: {arr2[0]}"); // arr2[0] é 99
+8-using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // O 'obj' aqui está guardando o TEXTO "123" (uma string)
+        object obj = "123";
+
+        // --- Correção ---
+        // O erro era tentar 'int x = (int)obj;'.
+        // Você não pode fazer cast (int) de uma string.
+        // Você precisa CONVERTER o texto para número.
+        
+        // Jeito 1 (Mais fácil):
+        int x = Convert.ToInt32(obj);
+
+        // Jeito 2 (Também comum):
+        // int x = int.Parse((string)obj);
+
+        
+        // Agora 'x' é um número de verdade
+        Console.WriteLine("O número é: " + x);
+        
+        // A prova de que virou número:
+        Console.WriteLine("Prova (x + 1): " + (x + 1)); // Vai mostrar 124
+    }
+}
+9-O int.Parse converte o texto "99" (da variável numStr) para o número 99 (e o armazena na variável num).
+
+ o Console.WriteLine imprime o valor de num, que é 99.
